@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Flashcards</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2980b9, #2c3e50);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            perspective: 1000px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flashcard {
+            width: 300px;
+            height: 200px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard .front, .flashcard .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 15px;
+        }
+
+        .flashcard .front {
+            background: #2980b9;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .flashcard .back {
+            background: #2c3e50;
+            color: white;
+            transform: rotateY(180deg);
+            text-align: center;
+            font-size: 18px;
+            padding: 10px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+        }
+
+        .navigation button {
+            background: #2980b9;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .navigation button:hover {
+            background: #21618c;
+            transform: translateY(-2px);
+        }
+
+        .navigation button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flashcard" id="flashcard">
+            <div class="front" id="front">
+                Web3 Topic 1
+            </div>
+            <div class="back" id="back">
+                Information about Web3 Topic 1
+            </div>
+        </div>
+        <div class="navigation">
+            <button id="prevBtn">Previous</button>
+            <button id="nextBtn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const topics = [
+            { front: "Blockchain", back: "A decentralized digital ledger that records transactions across many computers." },
+            { front: "Smart Contract", back: "Self-executing contracts with the terms directly written into code." },
+            { front: "Decentralized Finance (DeFi)", back: "Financial services using cryptocurrencies without traditional intermediaries." },
+            { front: "Non-Fungible Token (NFT)", back: "Unique digital assets representing ownership of a specific item or piece of content." },
+            { front: "Decentralized Autonomous Organization (DAO)", back: "Organization governed by smart contracts and blockchain rather than traditional management." },
+            { front: "Web3 Browser", back: "Browsers that support decentralized applications and interactions with blockchains." },
+            { front: "Cryptocurrency", back: "Digital or virtual currencies secured by cryptography." },
+            { front: "Ethereum", back: "A decentralized, open-source blockchain featuring smart contract functionality." },
+            { front: "Consensus Mechanism", back: "Protocols that ensure all participants in the blockchain network agree on the ledger's state." },
+            { front: "Gas Fee", back: "Transaction fees paid to miners on a blockchain network, often in Ethereum." },
+            { front: "Wallet", back: "A digital tool that stores private and public keys for cryptocurrency transactions." },
+            { front: "Tokenization", back: "The process of converting rights to an asset into a digital token on a blockchain." },
+            { front: "Interoperability", back: "The ability of different blockchain networks to exchange information and work together." },
+            { front: "Layer 2", back: "Secondary frameworks or protocols built on top of a blockchain to improve scalability and speed." },
+            { front: "Staking", back: "Holding funds in a cryptocurrency wallet to support the operations of a blockchain network." },
+            { front: "Decentralized Application (DApp)", back: "Applications that run on a blockchain network rather than a centralized server." },
+            { front: "ICO (Initial Coin Offering)", back: "A fundraising method where new cryptocurrencies sell their tokens to early backers." },
+            { front: "Metaverse", back: "A collective virtual shared space, created by the convergence of virtually enhanced physical reality and physically persistent virtual reality." },
+            { front: "InterPlanetary File System (IPFS)", back: "A decentralized protocol for storing and sharing files on a distributed network." },
+            { front: "Proof of Work (PoW)", back: "A consensus mechanism where miners solve complex mathematical puzzles to validate transactions and create new blocks." }
+        ];
+
+        let currentIndex = 0;
+
+        const flashcard = document.getElementById('flashcard');
+        const front = document.getElementById('front');
+        const back = document.getElementById('back');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateFlashcard(index) {
+            front.textContent = topics[index].front;
+            back.textContent = topics[index].back;
+        }
+
+        flashcard.addEventListener('click', () => {
+            flashcard.classList.toggle('is-flipped');
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateFlashcard(currentIndex);
+                if (flashcard.classList.contains('is-flipped')) {
+                    flashcard.classList.remove('is-flipped');
+                }
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < topics.length - 1) {
+                currentIndex++;
+                updateFlashcard(currentIndex);
+                if (flashcard.classList.contains('is-flipped')) {
+                    flashcard.classList.remove('is-flipped');
+                }
+            }
+        });
+
+        updateFlashcard(currentIndex);
+    </script>
+</body>
+</html>
